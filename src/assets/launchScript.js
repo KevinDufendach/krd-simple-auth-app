@@ -28,7 +28,7 @@ var state = Math.round(Math.random()*100000000).toString();
 // To keep things flexible, let's construct the launch URL by taking the base of the
 // current URL and replace "launch.html" with "index.html".
 var launchUri = window.location.protocol + "//" + window.location.host + window.location.pathname;
-var redirectUri = launchUri.replace("launch.html","afterlaunch");
+var redirectUri = launchUri.replace("launch.html","landing.html");
 
 // FHIR Service Conformance Statement URL
 var conformanceUri = serviceUri + "/metadata";

@@ -1,6 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {isUndefined} from 'util';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-landing',
@@ -22,7 +23,7 @@ export class LandingComponent implements OnInit, OnDestroy {
   data: any;
   options: any;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private http: HttpClient) { }
 
   ngOnInit() {
     this.sub = this.route.queryParams.subscribe(params => {
@@ -60,6 +61,15 @@ export class LandingComponent implements OnInit, OnDestroy {
         'Authorization': 'Basic ' + btoa(this.clientId + ':' + this.secret)
       };
     }
+  }
+
+  doPostRequest() {
+    console.log('Data: -------------');
+    console.log(JSON.stringify(this.data));
+
+    this.http.post(this.tokenUri, JSON.stringify(this.data)).subscribe(
+      data => console.log(data)
+    );
   }
 
   private getUrlParameter(sParam: string): string {

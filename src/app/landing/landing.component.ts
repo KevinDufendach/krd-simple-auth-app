@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {isUndefined} from 'util';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 
 @Component({
   selector: 'app-landing',
@@ -20,8 +20,10 @@ export class LandingComponent implements OnInit, OnDestroy {
   secret: string;
   serviceUri: string;
   redirectUri: string;
-  data: any;
+  // data: any;
   options: any;
+
+  body: HttpParams;
 
   constructor(private route: ActivatedRoute, private http: HttpClient) { }
 
@@ -43,31 +45,56 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.redirectUri = params.redirectUri;
 
     // Prep the token exchange call parameters
-    this.data = {
-      code: this.code,
-      grant_type: 'authorization_code',
-      redirect_uri: this.redirectUri
-    };
-    if (!this.secret) {
-      this.data['client_id'] = this.clientId;
-    }
-    this.options = {
-      url: this.tokenUri,
-      type: 'POST',
-      data: this.data
-    };
-    if (this.secret) {
-      this.options['headers'] = {
-        'Authorization': 'Basic ' + btoa(this.clientId + ':' + this.secret)
-      };
-    }
+    // this.data = {
+    //   code: this.code,
+    //   grant_type: 'authorization_code',
+    //   redirect_uri: this.redirectUri
+    // };
+    // if (!this.secret) {
+    //   this.data['client_id'] = this.clientId;
+    // }
+    // this.options = {
+    //   url: this.tokenUri,
+    //   type: 'POST',
+    //   data: this.data
+    // };
+    // if (this.secret) {
+    //   this.options['headers'] = {
+    //     'Authorization': 'Basic ' + btoa(this.clientId + ':' + this.secret)
+    //   };
+    // }
+
+    // this.body = new HttpParams();
+
+    // Prep the token exchange call parameters
+    this.body = new HttpParams()
+      .set('code', this.code)
+      .set('grant_type', 'authorization_code')
+      .set('redirect_uri', this.redirectUri)
+      .set('client_id', this.clientId);
+    //
+    // if (!this.secret) {
+    //   this.body.append('client_id', this.clientId);
+    // }
+
+    // // Prep the token exchange call parameters
+    // this.body.set('code', 'myCode');
+
+    console.log('body: ');
+    console.log(this.body.toString());
+
+    // if (this.secret) {
+    //   this.options['headers'] = {
+    //     'Authorization': 'Basic ' + btoa(this.clientId + ':' + this.secret)
+    //   };
+    // }
   }
 
   doPostRequest() {
     console.log('Data: -------------');
-    console.log(JSON.stringify(this.data));
+    console.log(this.body.toString());
 
-    this.http.post(this.tokenUri, JSON.stringify(this.data)).subscribe(
+    this.http.post(this.tokenUri, this.body).subscribe(
       data => console.log(data)
     );
   }

@@ -30,6 +30,9 @@ function landingFn() {
     options['headers'] = {'Authorization': 'Basic ' + btoa(clientId + ':' + secret)};
   }
 
+  console.log('Printing options from js script:');
+  console.log(options);
+
 // obtain authorization token from the authorization service using the authorization code
   $.ajax(options).done(function (res) {
     // should get back the access token and the patient ID

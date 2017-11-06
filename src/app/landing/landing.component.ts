@@ -22,6 +22,10 @@ export class LandingComponent implements OnInit, OnDestroy {
   redirectUri: string;
   // data: any;
   options: any;
+  ptName: string;
+
+  private accessToken: string;
+  private patientId: string;
 
   body: HttpParams;
 
@@ -44,26 +48,6 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.serviceUri = params.serviceUri;
     this.redirectUri = params.redirectUri;
 
-    // Prep the token exchange call parameters
-    // this.data = {
-    //   code: this.code,
-    //   grant_type: 'authorization_code',
-    //   redirect_uri: this.redirectUri
-    // };
-    // if (!this.secret) {
-    //   this.data['client_id'] = this.clientId;
-    // }
-    // this.options = {
-    //   url: this.tokenUri,
-    //   type: 'POST',
-    //   data: this.data
-    // };
-    // if (this.secret) {
-    //   this.options['headers'] = {
-    //     'Authorization': 'Basic ' + btoa(this.clientId + ':' + this.secret)
-    //   };
-    // }
-
     // this.body = new HttpParams();
 
     // Prep the token exchange call parameters
@@ -72,31 +56,32 @@ export class LandingComponent implements OnInit, OnDestroy {
       .set('grant_type', 'authorization_code')
       .set('redirect_uri', this.redirectUri)
       .set('client_id', this.clientId);
-    //
-    // if (!this.secret) {
-    //   this.body.append('client_id', this.clientId);
-    // }
-
-    // // Prep the token exchange call parameters
-    // this.body.set('code', 'myCode');
-
-    console.log('body: ');
-    console.log(this.body.toString());
-
-    // if (this.secret) {
-    //   this.options['headers'] = {
-    //     'Authorization': 'Basic ' + btoa(this.clientId + ':' + this.secret)
-    //   };
-    // }
   }
 
   doPostRequest() {
-    console.log('Data: -------------');
-    console.log(this.body.toString());
-
     this.http.post(this.tokenUri, this.body).subscribe(
-      data => console.log(data)
+      data => {
+        console.log(data);
+
+        this.accessToken = data['access_token'];
+        this.patientId = data['patient'];
+      }
     );
+  }
+
+  getPatientName() {
+    if (!this.accessToken) {
+      return;
+    }
+
+    this.http.get(
+      this.serviceUri + '/Patient/' + this.patientId, {
+        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.accessToken)
+      }
+    ).subscribe( data => {
+      // get pt name and store it in a variable
+      this.ptName = data['name'][0].given.join(' ') + ' ' + data['name'][0].family.join(' ');
+    });
   }
 
   private getUrlParameter(sParam: string): string {

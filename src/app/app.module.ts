@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { LandingComponent } from './landing/landing.component';
 import {RouterModule, Routes} from '@angular/router';
 import {HttpClientModule} from '@angular/common/http';
+import {SmartAuthService} from './smart-auth.service';
 
 const appRoutes: Routes = [
   {path: 'afterlaunch', component: LandingComponent},
@@ -23,7 +24,7 @@ const appRoutes: Routes = [
       {enableTracing: true}
     )
   ],
-  providers: [],
+  providers: [SmartAuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

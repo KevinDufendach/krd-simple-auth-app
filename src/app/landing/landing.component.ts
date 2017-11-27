@@ -22,13 +22,11 @@ export class LandingComponent implements OnInit {
 
   getPatientName() {
     console.log('getting pt Name');
-    this.smartService.makeServiceCall().subscribe( data => {
-      // get pt name and store it in a variable
-      this.ptName = data['name'][0].given.join(' ') + ' ' + data['name'][0].family.join(' ');
-    });
-
     this.smartService.getPatient().subscribe(
-      patient => this.ptFhir = patient
+      patient => {
+        this.ptFhir = patient;
+        this.ptName = this.ptFhir.name[0].given + " " + this.ptFhir.name[0].family;
+      }
     );
   }
 

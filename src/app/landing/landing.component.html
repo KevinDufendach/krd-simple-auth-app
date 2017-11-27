@@ -4,4 +4,14 @@
 
 <h1>Name: {{ptName}}</h1>
 
+<label>Property:
+    <input [(ngModel)]="property" placeholder="property">
+</label>
+<button (click)="printPatientProperty()">PrintProperty</button>
+<p>
+    <textarea [(ngModel)]="data" placeholder="data"></textarea>
+</p>
+
+<button (click)="getPatientDetails()">Get patient details</button>
+
 <p>End of landing Component</p>

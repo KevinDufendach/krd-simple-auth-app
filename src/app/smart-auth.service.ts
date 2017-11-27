@@ -3,6 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {isUndefined} from 'util';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
+import { Patient } from '../fhir/lib';
 
 @Injectable()
 export class SmartAuthService {
@@ -61,7 +62,19 @@ export class SmartAuthService {
       return Observable.throw('no access token available');
     }
 
-    return this.http.get(
+    return this.http.get<any>(
+      this.serviceUri + '/Patient/' + this.patientId, {
+        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.accessToken)
+      }
+    );
+  }
+
+  getPatient(): Observable<Patient> {
+    if (!this.accessToken) {
+      return Observable.throw('no access token');
+    }
+
+    return this.http.get<Patient>(
       this.serviceUri + '/Patient/' + this.patientId, {
         headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.accessToken)
       }

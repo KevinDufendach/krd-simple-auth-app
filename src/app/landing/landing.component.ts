@@ -25,7 +25,7 @@ export class LandingComponent implements OnInit {
     this.smartService.getPatient().subscribe(
       patient => {
         this.ptFhir = patient;
-        this.ptName = this.ptFhir.name[0].given + " " + this.ptFhir.name[0].family;
+        this.ptName = this.ptFhir.name[0].given + ' ' + this.ptFhir.name[0].family;
       }
     );
   }
